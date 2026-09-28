@@ -1,0 +1,10 @@
+const express = require('express');
+const router = express.Router();
+const controller = require('../controllers/bookingController');
+const auth = require('../middleware/auth');
+router.post('/', auth, controller.createBooking);
+router.get('/my', auth, controller.getTenantBookings);
+router.get('/landlord', auth, controller.getLandlordBookings);
+router.get('/all', auth, controller.getAllBookings);
+router.patch('/:id/status', auth, controller.updateBookingStatus);
+module.exports = router;
