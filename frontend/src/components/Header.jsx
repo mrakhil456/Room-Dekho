@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice';
 import { clearRooms } from '../store/roomsSlice';
@@ -22,7 +22,9 @@ const Header = () => {
   const getNavItems = () => {
     if (!user) return [
       { to: '/', label: 'Home', icon: Home },
-      { to: '/login', label: 'Login', icon: User }
+      { to: '/search', label: 'Find a room', icon: Search },
+      { to: '/login', label: 'Sign in', icon: User },
+      { to: '/register', label: 'Get started', icon: Plus, primary: true }
     ];
     const items = [
       { to: '/', label: 'Home', icon: Home },
@@ -40,22 +42,22 @@ const Header = () => {
   const navItems = getNavItems();
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="header-shell sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          <Link to="/" className="text-xl sm:text-2xl font-bold text-blue-600">RoomDekho</Link>
+        <div className="flex min-h-[72px] justify-between items-center py-3">
+          <Link to="/" className="brand-mark text-xl sm:text-2xl font-extrabold tracking-tight">RoomDekho<span>.</span></Link>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-3"><ThemeControls />
-          <nav className="flex space-x-4 lg:space-x-6 items-center">
+          <div className="hidden lg:flex items-center gap-3"><ThemeControls />
+          <nav aria-label="Main navigation" className="flex items-center gap-1 lg:gap-2">
             {navItems.map((item, i) => (
               item.to ? (
-                <Link key={i} to={item.to} className="flex items-center space-x-1 hover:text-blue-600 font-medium text-sm lg:text-base">
+                <NavLink key={i} to={item.to} end={item.to === '/'} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''} ${item.primary ? 'nav-link-primary' : ''}`}>
                   <item.icon className="w-4 h-4 lg:w-5 lg:h-5" />
-                  <span className="hidden lg:inline">{item.label}</span>
-                </Link>
+                  <span>{item.label}</span>
+                </NavLink>
               ) : (
-                <button key={i} onClick={item.onClick} className="flex items-center space-x-1 hover:text-blue-600 font-medium text-sm lg:text-base">
+                <button key={i} onClick={item.onClick} className="nav-link">
                   <item.icon className="w-4 h-4 lg:w-5 lg:h-5" />
                   <span className="hidden lg:inline">{item.label}</span>
                 </button>
@@ -64,10 +66,12 @@ const Header = () => {
           </nav></div>
 
           {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2"><ThemeControls />
+          <div className="flex lg:hidden items-center gap-2"><ThemeControls />
           <button
-            className="p-2"
+            className="menu-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
               <X className="w-6 h-6" />
@@ -79,18 +83,19 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="md:hidden pb-4 space-y-2 border-t border-gray-100 pt-4">
+          <nav aria-label="Mobile navigation" className="mobile-nav lg:hidden pb-4 space-y-1 border-t pt-3">
             {navItems.map((item, i) => (
               item.to ? (
-                <Link
+                <NavLink
                   key={i}
                   to={item.to}
-                  className="flex items-center space-x-2 p-2 hover:bg-blue-50 hover:text-blue-600 font-medium rounded-lg"
+                  end={item.to === '/'}
+                  className={({ isActive }) => `nav-link mobile-nav-link ${isActive ? 'active' : ''} ${item.primary ? 'nav-link-primary' : ''}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <item.icon className="w-5 h-5" />
                   <span>{item.label}</span>
-                </Link>
+                </NavLink>
               ) : (
                 <button
                   key={i}
@@ -98,7 +103,7 @@ const Header = () => {
                     item.onClick();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full flex items-center space-x-2 p-2 hover:bg-blue-50 hover:text-blue-600 font-medium rounded-lg text-left"
+                  className="nav-link mobile-nav-link w-full text-left"
                 >
                   <item.icon className="w-5 h-5" />
                   <span>{item.label}</span>

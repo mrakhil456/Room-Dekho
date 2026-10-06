@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Eye, EyeOff, ShieldCheck, Search, Heart } from 'lucide-react';
 import { authAPI } from '../services/api';
 import { login } from '../store/authSlice';
 
@@ -10,6 +10,8 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState('tenant');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,114 +65,67 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 py-8 sm:py-12 px-4 sm:px-6">
-      <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-        <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p className="text-sm sm:text-base text-gray-600">Join us to find your perfect room</p>
-        </div>
-        
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6 text-sm">
-            {error}
+    <main className="auth-page min-h-[calc(100vh-72px)] px-4 py-8 sm:px-6 sm:py-12">
+      <div className="mx-auto grid max-w-6xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl lg:min-h-[700px] lg:grid-cols-2">
+        <section className="auth-visual relative hidden flex-col justify-between p-10 text-white lg:flex xl:p-14">
+          <div className="relative z-10">
+            <Link to="/" className="text-2xl font-black tracking-tight text-white">RoomDekho<span className="text-amber-300">.</span></Link>
+            <p className="mt-20 max-w-md text-4xl font-bold leading-tight xl:text-5xl">A better place to begin your next chapter.</p>
+            <p className="mt-5 max-w-md leading-7 text-slate-200">Join a community making room-finding clearer, simpler, and more personal.</p>
           </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Full Name</label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 sm:pl-11 pr-4 py-2 sm:py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="John Doe"
-              />
+          <div className="relative z-10 grid gap-4">
+            <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-slate-950/25 p-3"><ShieldCheck className="h-5 w-5 text-emerald-300" /><span className="text-sm font-medium">Browse verified rooms</span></div>
+            <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-slate-950/25 p-3"><Search className="h-5 w-5 text-amber-300" /><span className="text-sm font-medium">Explore places that fit your budget</span></div>
+            <div className="flex items-center gap-3 rounded-xl border border-white/15 bg-slate-950/25 p-3"><Heart className="h-5 w-5 text-rose-300" /><span className="text-sm font-medium">Keep your favorite rooms together</span></div>
+          </div>
+        </section>
+        <section className="flex items-center justify-center p-5 sm:p-10">
+          <div className="auth-panel w-full max-w-md rounded-2xl p-6 sm:border-0 sm:p-2 sm:shadow-none">
+            <Link to="/" className="mb-7 inline-block text-xl font-black tracking-tight text-slate-900 lg:hidden">RoomDekho<span className="text-amber-500">.</span></Link>
+            <div className="mb-7">
+              <p className="section-kicker mb-2">Join RoomDekho</p>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900">Create your account</h1>
+              <p className="mt-2 text-sm leading-6 text-slate-600">Create your RoomDekho account and find your next home.</p>
             </div>
+            {error && <div role="alert" className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">{error}</div>}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="register-name" className="mb-1.5 block text-sm font-semibold text-slate-700">Full name</label>
+                <div className="relative"><User aria-hidden="true" className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input id="register-name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className="auth-input w-full rounded-xl border py-3 pl-11 pr-4 text-sm" placeholder="Your name" /></div>
+              </div>
+              <div>
+                <label htmlFor="register-email" className="mb-1.5 block text-sm font-semibold text-slate-700">Email address</label>
+                <div className="relative"><Mail aria-hidden="true" className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input id="register-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} className="auth-input w-full rounded-xl border py-3 pl-11 pr-4 text-sm" placeholder="you@example.com" /></div>
+              </div>
+              <div>
+                <label htmlFor="register-password" className="mb-1.5 block text-sm font-semibold text-slate-700">Password</label>
+                <div className="relative"><Lock aria-hidden="true" className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input id="register-password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="auth-input w-full rounded-xl border py-3 pl-11 pr-12 text-sm" placeholder="At least 6 characters" /><button type="button" onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-slate-500 hover:bg-slate-100" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div>
+              </div>
+              <div>
+                <label htmlFor="register-confirm-password" className="mb-1.5 block text-sm font-semibold text-slate-700">Confirm password</label>
+                <div className="relative"><Lock aria-hidden="true" className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input id="register-confirm-password" type={showConfirmPassword ? 'text' : 'password'} autoComplete="new-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="auth-input w-full rounded-xl border py-3 pl-11 pr-12 text-sm" placeholder="Repeat your password" /><button type="button" onClick={() => setShowConfirmPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-slate-500 hover:bg-slate-100" aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}>{showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div>
+              </div>
+              <fieldset>
+                <legend className="mb-2 block text-sm font-semibold text-slate-700">I am joining as a</legend>
+                <div className="grid grid-cols-2 gap-2">
+                  {['tenant', 'landlord'].map((r) => (
+                    <label key={r} className="role-option flex cursor-pointer items-center justify-center rounded-xl border p-2.5 text-sm font-semibold capitalize transition-colors">
+                      <input type="radio" name="role" value={r} checked={role === r} onChange={() => setRole(r)} className="sr-only" />
+                      {r}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <button type="submit" disabled={loading} className="primary-btn w-full py-3 text-base">
+                {loading ? 'Creating account…' : 'Create account'}
+                {!loading && <ArrowRight aria-hidden="true" className="h-4 w-4" />}
+              </button>
+            </form>
+            <p className="mt-6 text-center text-sm text-slate-600">Already have an account? <Link to="/login" className="font-bold text-amber-700 hover:underline">Sign in</Link></p>
           </div>
-
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 sm:pl-11 pr-4 py-2 sm:py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="you@example.com"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 sm:pl-11 pr-4 py-2 sm:py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="At least 6 characters"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4 sm:mb-6">
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full pl-10 sm:pl-11 pr-4 py-2 sm:py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="Confirm your password"
-              />
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-3">Register as</label>
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              {['tenant', 'landlord'].map((r) => (
-                <label key={r} className="flex flex-col items-center space-y-1 p-2 sm:p-3 border-2 rounded-xl cursor-pointer hover:border-indigo-300 transition-all">
-                  <input
-                    type="radio"
-                    name="role"
-                    value={r}
-                    checked={role === r}
-                    onChange={() => setRole(r)}
-                    className="hidden peer"
-                  />
-                  <div className="w-4 h-4 border-2 rounded-full peer-checked:border-indigo-600 peer-checked:bg-indigo-600 transition-all"></div>
-                  <span className="font-medium text-xs sm:text-sm capitalize">{r}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <button 
-            type="submit" 
-            disabled={loading}
-            className={`primary-btn w-full py-2 sm:py-3 text-base sm:text-lg font-semibold flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-          >
-            {loading ? 'Creating Account...' : 'Create Account'}
-            {!loading && <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />}
-          </button>
-        </form>
-
-        <p className="text-center text-xs sm:text-sm text-gray-600 mt-6">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 hover:text-indigo-700 font-semibold">
-            Sign In
-          </Link>
-        </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 
