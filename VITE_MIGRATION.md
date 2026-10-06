@@ -11,7 +11,15 @@ cp .env.example .env
 npm run dev
 ```
 
-Set `VITE_API_BASE_URL` to the backend origin (for example `http://localhost:5000`), without `/api` at the end. Vite exposes only `VITE_*` variables to browser code; never put secrets there.
+Set `VITE_API_BASE_URL` to the backend origin (for example `http://localhost:5000`), without `/api` at the end. The frontend adds `/api` to requests automatically. Vite exposes only `VITE_*` variables to browser code; never put secrets there.
+
+For a separate production frontend and backend deployment:
+
+- Configure `VITE_API_BASE_URL` in the frontend host's build environment to the backend origin, without `/api`.
+- Configure `FRONTEND_URL` in the backend host's runtime environment to the exact frontend origin. Multiple allowed origins can be comma-separated.
+- Rebuild and redeploy the frontend after changing `VITE_API_BASE_URL`; Vite embeds it at build time.
+
+If the backend serves the built frontend from the same origin, leave `VITE_API_BASE_URL` empty.
 
 Production build and preview:
 

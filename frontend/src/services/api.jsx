@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const configuredBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const configuredBase = (import.meta.env.VITE_API_BASE_URL || '')
+  .replace(/\/+$/, '')
+  .replace(/\/api$/i, '');
 const API_BASE_URL = `${configuredBase}/api`;
 
 // Create axios instance

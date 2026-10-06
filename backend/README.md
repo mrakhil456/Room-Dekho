@@ -20,9 +20,18 @@ PORT=5000
 MONGODB_URI=mongodb://localhost:27017/room-rental
 JWT_SECRET=replace_with_a_random_secret_at_least_32_characters
 NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
 ```
 
 4. Make sure MongoDB is running on your system.
+
+For a separate production frontend and backend deployment, set `FRONTEND_URL` on
+the backend to the exact frontend origin (scheme and host, no path). For example,
+use `https://your-frontend.example.com`. Set the frontend build variable
+`VITE_API_BASE_URL` to the backend origin (for example,
+`https://your-backend.example.com`), without `/api`; the frontend appends `/api`
+to API requests. If frontend and backend are deployed on the same origin, leave
+`VITE_API_BASE_URL` empty.
 
 ## Running the Server
 
